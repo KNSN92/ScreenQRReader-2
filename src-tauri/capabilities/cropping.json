@@ -1,0 +1,16 @@
+{
+  "$schema": "../gen/schemas/desktop-schema.json",
+  "identifier": "cropping",
+  "description": "Capability for the cropping window",
+  "windows": ["cropping:*"],
+  "permissions": [
+    "core:default",
+    "opener:default",
+    "core:window:allow-get-all-windows",
+    "core:window:allow-set-focus",
+    "core:window:allow-hide",
+    "core:window:allow-close",
+    "clipboard-manager:default",
+    "os:default"
+  ]
+}

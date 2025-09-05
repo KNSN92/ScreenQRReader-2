@@ -1,0 +1,3 @@
+[target.'cfg(target_os = "macos")']
+linker = "clang"
+rustflags = ["-C", "link-arg=-fuse-ld=lld"]
