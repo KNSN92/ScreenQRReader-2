@@ -22,7 +22,7 @@ fn setup(app: &mut App) -> Result<(), Box<dyn std::error::Error>> {
     config::setup_config(app)?;
     setup_shortcut(app.handle());
     tray::setup_tray(app)?;
-    mac::setup_notification(app);
+    mac::setup_notification();
     Ok(())
 }
 

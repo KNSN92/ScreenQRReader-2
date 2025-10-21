@@ -2407,18 +2407,6 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "c41e0c4fef86961ac6d6f8a82609f55f31b05e4fce149ac5710e439df7619ba4"
 
 [[package]]
-name = "mac-notification-sys"
-version = "0.6.6"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "119c8490084af61b44c9eda9d626475847a186737c0378c85e32d77c33a01cd4"
-dependencies = [
- "cc",
- "objc2 0.6.2",
- "objc2-foundation 0.3.1",
- "time",
-]
-
-[[package]]
 name = "markup5ever"
 version = "0.14.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -2798,6 +2786,16 @@ dependencies = [
 ]
 
 [[package]]
+name = "objc2-core-location"
+version = "0.3.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "ac0f75792558aa9d618443bbb5db7426a7a0b6fddf96903f86ef9ad02e135740"
+dependencies = [
+ "objc2 0.6.2",
+ "objc2-foundation 0.3.1",
+]
+
+[[package]]
 name = "objc2-core-media"
 version = "0.3.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -2956,6 +2954,19 @@ dependencies = [
  "bitflags 2.9.3",
  "objc2 0.6.2",
  "objc2-core-foundation",
+ "objc2-foundation 0.3.1",
+]
+
+[[package]]
+name = "objc2-user-notifications"
+version = "0.3.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "2a3f5ec77a81d9e0c5a0b32159b0cb143d7086165e79708351e02bf37dfc65cd"
+dependencies = [
+ "bitflags 2.9.3",
+ "block2 0.6.1",
+ "objc2 0.6.2",
+ "objc2-core-location",
  "objc2-foundation 0.3.1",
 ]
 
@@ -3852,8 +3863,11 @@ checksum = "94143f37725109f92c262ed2cf5e59bce7498c01bcc1502d7b9afe439a4e9f49"
 name = "screenqrreader"
 version = "0.1.0"
 dependencies = [
- "mac-notification-sys",
+ "block2 0.6.1",
+ "objc2 0.6.2",
  "objc2-app-kit",
+ "objc2-foundation 0.3.1",
+ "objc2-user-notifications",
  "serde",
  "serde_json",
  "tauri",
@@ -3864,6 +3878,7 @@ dependencies = [
  "tauri-plugin-opener",
  "tauri-plugin-os",
  "tokio",
+ "uuid",
  "xcap",
  "zbar-rust",
 ]
@@ -5136,9 +5151,9 @@ checksum = "b6c140620e7ffbb22c2dee59cafe6084a59b5ffc27a8859a5f0d494b5d52b6be"
 
 [[package]]
 name = "uuid"
-version = "1.18.0"
+version = "1.18.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "f33196643e165781c20a5ead5582283a7dacbb87855d867fbc2df3f81eddc1be"
+checksum = "2f87b8aa10b915a06587d0dec516c282ff295b475d94abf425d62b57710070a2"
 dependencies = [
  "getrandom 0.3.3",
  "js-sys",

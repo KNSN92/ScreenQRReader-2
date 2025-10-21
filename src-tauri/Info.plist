@@ -4,5 +4,7 @@
 <dict>
     <key>LSUIElement</key>
     <string>1</string>
+    <key>NSUserNotificationUsageDescription</key>
+    <string>QRコードを読み取った結果を表示する</string>
 </dict>
 </plist>

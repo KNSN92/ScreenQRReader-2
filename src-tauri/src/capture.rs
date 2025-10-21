@@ -53,6 +53,7 @@ pub fn capture(app_handle: AppHandle, rect: CaptureRect, monitor_id: u32) {
         }
         _ => {
             notify(
+                &app_handle,
                 "QRコードの読み取りに失敗しました",
                 "",
                 None::<Box<dyn FnOnce() + Send + 'static>>,
@@ -72,13 +73,17 @@ pub fn capture(app_handle: AppHandle, rect: CaptureRect, monitor_id: u32) {
 
     if !open_browser || tauri::Url::parse(&content).is_err() {
         notify(
+            &app_handle,
             "QRコードの読み取りに成功しました",
             "クリックしてコピー",
-            Some(move || {
-                app_handle
-                    .clipboard()
-                    .write_text(content)
-                    .expect("failed to write text");
+            Some({
+                let cloned_app_handle = app_handle.clone();
+                move || {
+                    cloned_app_handle
+                        .clipboard()
+                        .write_text(content)
+                        .expect("failed to write text");
+                }
             }),
         );
         return;
