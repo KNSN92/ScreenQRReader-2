@@ -8,6 +8,7 @@ use objc2::{
     AnyThread, DefinedClass,
 };
 use objc2_app_kit::{NSStatusWindowLevel, NSWindow, NSWindowCollectionBehavior};
+use objc2_core_graphics::{CGPreflightScreenCaptureAccess, CGRequestScreenCaptureAccess};
 use objc2_foundation::{
     ns_string, NSArray, NSDictionary, NSError, NSObject, NSObjectProtocol, NSSet, NSString,
 };
@@ -31,6 +32,14 @@ pub fn set_front(window: &WebviewWindow) -> tauri::Result<()> {
         )
     }
     Ok(())
+}
+
+pub fn is_screenshot_allowed() -> bool {
+    CGPreflightScreenCaptureAccess()
+}
+
+pub fn request_allow_screenshot() {
+    CGRequestScreenCaptureAccess();
 }
 
 struct NotificationDelegateVars {
