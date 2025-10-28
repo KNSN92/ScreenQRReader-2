@@ -30,6 +30,15 @@
     "macOS": {
       "entitlements": "./entitlements.plist",
       "signingIdentity": "-"
+    },
+    "createUpdaterArtifacts": true
+  },
+  "plugins": {
+    "updater": {
+      "pubkey": "dW50cnVzdGVkIGNvbW1lbnQ6IG1pbmlzaWduIHB1YmxpYyBrZXk6IDQzNDVGNDFGQjYxNzg3RTAKUldUZ2h4ZTJIL1JGUTB2WkVQYjd6cUVzZFB4bW5LRjJrK2Z5OE8veC9LVXFjaXpvQVdKOUVOdWEK",
+      "endpoints": [
+        "https://github.com/KNSN92/ScreenQRReader-2/releases/latest/download/latest.json"
+      ]
     }
   }
 }
