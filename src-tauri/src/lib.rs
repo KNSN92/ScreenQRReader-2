@@ -5,7 +5,7 @@ use tauri_plugin_autostart::MacosLauncher;
 
 use crate::{
     shortcut::{setup_shortcut, Shortcuts},
-    update::{check_update, start_update},
+    update::check_update,
 };
 
 mod capture;
