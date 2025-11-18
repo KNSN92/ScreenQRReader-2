@@ -3,13 +3,17 @@ use std::sync::Mutex;
 use tauri::{ActivationPolicy, App, Manager};
 use tauri_plugin_autostart::MacosLauncher;
 
-use crate::shortcut::{setup_shortcut, Shortcuts};
+use crate::{
+    shortcut::{setup_shortcut, Shortcuts},
+    update::{check_update, start_update},
+};
 
 mod capture;
 mod config;
 mod platform;
 mod shortcut;
 mod tray;
+mod update;
 mod window;
 
 pub struct QuitState {
@@ -17,6 +21,7 @@ pub struct QuitState {
 }
 
 fn setup(app: &mut App) -> Result<(), Box<dyn std::error::Error>> {
+    tauri::async_runtime::spawn(check_update(app.handle().clone()));
     app.manage(Mutex::new(QuitState { quitting: false }));
     app.manage(Mutex::new(Shortcuts::default()));
     config::setup_config(app)?;
@@ -48,7 +53,9 @@ pub fn run() {
             capture::capture,
             shortcut::register_capture_shortcut,
             shortcut::unregister_capture_shortcut,
-            shortcut::get_registered_shortcut
+            shortcut::get_registered_shortcut,
+            update::start_update,
+            update::relaunch,
         ])
         .setup(|app| setup(app))
         .build(tauri::generate_context!())

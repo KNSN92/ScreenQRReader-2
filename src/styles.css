@@ -6,7 +6,9 @@
 }
 
 body {
-  overflow: hidden;
+  /* overflow: hidden; */
+  width: 100vw;
+  height: 100vh;
 }
 
 .window {
@@ -102,4 +104,112 @@ body {
 
 #shortcut-field {
   width: fit-content;
+}
+
+#updater {
+  margin: 0;
+  width: 100%;
+  height: 100%;
+  background-color: #3356;
+  display: flex;
+  justify-content: center;
+  gap: 1.5rem;
+}
+
+#update-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  box-sizing: border-box;
+  flex-grow: 1;
+  padding-right: 1rem;
+}
+
+#update-icon {
+  width: 5rem;
+  padding-left: 1rem;
+  object-position: 0px 1.5rem;
+  object-fit: contain;
+}
+
+.update-title-updating {
+  padding-left: 8rem;
+  width: 100%;
+  text-align: left !important;
+}
+
+#update-title {
+  padding-top: 1rem;
+  text-align: center;
+  font-size: 1.5rem;
+  color: #88c;
+  pointer-events: none;
+}
+
+#update-progress-div {
+  width: 90%;
+  padding-top: 0.5rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+progress {
+  appearance: auto;
+  -webkit-appearance: none;
+}
+
+#update-progress {
+  width: 100%;
+  height: 1rem;
+}
+
+#update-progress::-webkit-progress-bar {
+  border-radius: 1rem;
+  overflow: hidden;
+  background-color: #446;
+}
+
+#update-progress::-webkit-progress-value {
+  background-color: cornflowerblue !important;
+}
+
+#update-progress-label {
+  color: #88c;
+}
+
+#update-btn-div {
+  padding-top: 1rem;
+  display: grid;
+  width: 100%;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.5rem;
+}
+
+.update-btn {
+  padding: 0.5rem;
+  display: block;
+  padding: 0.25rem 1rem;
+  border: none;
+  border-radius: 4px;
+  background-color: #446;
+  color: #88c;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+.update-btn:disabled {
+  background-color: #335;
+  color: #151525;
+  /* pointer-events: none; */
+  cursor: not-allowed;
+}
+
+.update-btn:hover:enabled {
+  transition: background-color 0.5s;
+  background-color: #557;
+}
+
+#update-relaunch-btn {
+
 }

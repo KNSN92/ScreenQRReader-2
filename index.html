@@ -27,5 +27,21 @@
       </div>
       <button id="shortcut-close-btn">閉じる</button>
     </div>
+    <div class="window hidden" id="updater">
+      <img id="update-icon" src="/icon.png" alt="Icon of ScreenQRReader" hidden></img>
+      <div id="update-content">
+        <h1 id="update-title">更新があります</h1>
+        <div id="update-progress-div" class="">
+          <progress id="update-progress" class="hidden" value="0" max="100">0%</progress>
+          <label for="update-progress" id="update-progress-label" class="hidden">0%</label>
+        </div>
+        <div id="update-btn-div">
+          <button class="update-btn" id="update-skip-btn">スキップ</button>
+          <button class="update-btn" id="update-update-btn">更新する</button>
+          <button class="update-btn hidden" id="update-close-btn" disabled>閉じる</button>
+          <button class="update-btn hidden" id="update-relaunch-btn" disabled>再起動</button>
+        </div>
+      </div>
+      </div>
   </body>
 </html>

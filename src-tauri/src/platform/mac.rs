@@ -98,8 +98,11 @@ impl NotificationDelegate {
 }
 
 pub fn setup_notification() {
+    #[cfg(debug_assertions)]
+    return;
     // let identifier = &app.config().identifier;
 
+    #[cfg(not(debug_assertions))]
     unsafe {
         let user_notification_center = UNUserNotificationCenter::currentNotificationCenter();
         user_notification_center.setNotificationCategories(&*NSSet::from_slice(&[
@@ -138,12 +141,17 @@ pub fn setup_notification() {
     }
 }
 
+#[allow(unused)]
 pub fn notify(
     app: &AppHandle,
     title: &'static str,
     message: &'static str,
     callback: Option<impl FnOnce() + Send + 'static>,
 ) {
+    #[cfg(debug_assertions)]
+    return;
+
+    #[cfg(not(debug_assertions))]
     app.run_on_main_thread(move || unsafe {
         let user_notification_center = UNUserNotificationCenter::currentNotificationCenter();
         let id: Option<String> = if let Some(callback) = callback {
