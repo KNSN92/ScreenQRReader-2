@@ -32,8 +32,11 @@
       <div id="update-content">
         <h1 id="update-title">更新があります</h1>
         <div id="update-progress-div" class="">
-          <progress id="update-progress" class="hidden" value="0" max="100">0%</progress>
-          <label for="update-progress" id="update-progress-label" class="hidden">0%</label>
+          <div id="update-progress-bar-div">
+            <progress id="update-progress" class="hidden" value="0" max="100">0%</progress>
+            <label for="update-progress" id="update-progress-percent-label" class="hidden">-%</label>
+          </div>
+          <div id="update-progress-size-label" class="hidden">0MB/-MB</div>
         </div>
         <div id="update-btn-div">
           <button class="update-btn" id="update-skip-btn">スキップ</button>
@@ -42,6 +45,6 @@
           <button class="update-btn hidden" id="update-relaunch-btn" disabled>再起動</button>
         </div>
       </div>
-      </div>
+    </div>
   </body>
 </html>

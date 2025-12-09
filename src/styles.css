@@ -6,7 +6,7 @@
 }
 
 body {
-  /* overflow: hidden; */
+  overflow: hidden;
   width: 100vw;
   height: 100vh;
 }
@@ -110,10 +110,15 @@ body {
   margin: 0;
   width: 100%;
   height: 100%;
+  padding-bottom: 1rem;
+  box-sizing: border-box;
   background-color: #3356;
   display: flex;
   justify-content: center;
   gap: 1.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 #update-content {
@@ -128,7 +133,7 @@ body {
 #update-icon {
   width: 5rem;
   padding-left: 1rem;
-  object-position: 0px 1.5rem;
+  /* object-position: 0px 1.5rem; */
   object-fit: contain;
 }
 
@@ -139,7 +144,7 @@ body {
 }
 
 #update-title {
-  padding-top: 1rem;
+  /* padding-top: 1rem; */
   text-align: center;
   font-size: 1.5rem;
   color: #88c;
@@ -149,6 +154,14 @@ body {
 #update-progress-div {
   width: 90%;
   padding-top: 0.5rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+#update-progress-bar-div {
+  width: 100%;
   display: flex;
   align-items: center;
   gap: 0.5rem;
@@ -174,7 +187,8 @@ progress {
   background-color: cornflowerblue !important;
 }
 
-#update-progress-label {
+#update-progress-percent-label, #update-progress-size-label {
+  word-break: keep-all;
   color: #88c;
 }
 

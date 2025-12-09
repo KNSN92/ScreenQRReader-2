@@ -16,7 +16,8 @@ export default function onLoaded() {
     const icon = document.getElementById("update-icon")! as HTMLImageElement;
     const title = document.getElementById("update-title")! as HTMLHeadingElement;
     const progressBar = document.getElementById("update-progress")! as HTMLProgressElement;
-    const progressLabel = document.getElementById("update-progress-label")! as HTMLLabelElement;
+    const progressPercentLabel = document.getElementById("update-progress-percent-label")! as HTMLLabelElement;
+    const progressSizeLabel = document.getElementById("update-progress-size-label")! as HTMLDivElement;
     const relaunchBtn = document.getElementById("update-relaunch-btn")! as HTMLButtonElement;
     const closeBtn = document.getElementById("update-close-btn")! as HTMLButtonElement;
     const skipBtn = document.getElementById("update-skip-btn")! as HTMLButtonElement;
@@ -33,7 +34,8 @@ export default function onLoaded() {
         closeBtn.classList.remove("hidden");
         relaunchBtn.classList.remove("hidden");
         progressBar.classList.remove("hidden");
-        progressLabel.classList.remove("hidden");
+        progressPercentLabel.classList.remove("hidden");
+        progressSizeLabel.classList.remove("hidden");
         title.classList.add("update-title-updating");
         title.innerText = "更新中...";
         blinkIntervalId = setInterval(() => {
@@ -63,12 +65,13 @@ export default function onLoaded() {
                 const downloadedMB = Math.round(payload.downloaded / 10000) / 100;
                 if(payload.total == null) {
                     progressBar.ariaBusy = "true";
-                    progressLabel.innerText = `-% ${downloadedMB}MB/-MB`;
+                    progressPercentLabel.innerText = "-%";
+                    progressSizeLabel.innerText = "MB/-MB";
                 }else {
                     const totalMB = Math.round(payload.total / 10000) / 100;
                     const percent = Math.round(payload.total === 0 ? 0 : payload.downloaded / payload.total * 100);
-                    progressLabel.innerText = `${percent}% ${downloadedMB}MB/${totalMB}MB`;
-
+                    progressPercentLabel.innerText = `${percent}%`;
+                    progressSizeLabel.innerText = `${downloadedMB}MB/${totalMB}MB`;
                     progressBar.ariaBusy = "false";
                     progressBar.max = payload.total;
                     progressBar.value = payload.downloaded;

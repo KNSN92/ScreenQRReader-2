@@ -61,7 +61,7 @@ pub fn relaunch(app: AppHandle) {
 
 fn create_window(app: &AppHandle) -> WebviewWindow {
     WebviewWindowBuilder::new(app, "updater", WebviewUrl::App("index.html".into()))
-        .inner_size(300., 150.)
+        .inner_size(300., 160.)
         .focused(true)
         .resizable(false)
         .transparent(true)
@@ -70,6 +70,7 @@ fn create_window(app: &AppHandle) -> WebviewWindow {
             radius: Some(10.),
             ..Default::default()
         })
+        .title("Updater")
         .build()
         .unwrap()
 }
