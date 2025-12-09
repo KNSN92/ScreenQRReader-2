@@ -98,46 +98,46 @@ impl NotificationDelegate {
 }
 
 pub fn setup_notification() {
-    #[cfg(debug_assertions)]
-    return;
-    // let identifier = &app.config().identifier;
-
-    #[cfg(not(debug_assertions))]
-    unsafe {
-        let user_notification_center = UNUserNotificationCenter::currentNotificationCenter();
-        user_notification_center.setNotificationCategories(&*NSSet::from_slice(&[
-            &*UNNotificationCategory::categoryWithIdentifier_actions_intentIdentifiers_options(
-                ns_string!("dismiss"),
-                &NSArray::new(),
-                &NSArray::new(),
-                UNNotificationCategoryOptions::CustomDismissAction,
-            ),
-        ]));
-        user_notification_center.requestAuthorizationWithOptions_completionHandler(
-            UNAuthorizationOptions::Alert | UNAuthorizationOptions::Sound,
-            &*RcBlock::new(|authorized: Bool, err: *mut NSError| {
-                if !authorized.as_bool() {
-                    println!("Not authorized")
-                }
-                println!("error is null? {}", err.is_null());
-                if !err.is_null() {
-                    let err = &*err;
-                    println!(
-                        "{:?}\n{:?}",
-                        err.localizedDescription(),
-                        err.localizedFailureReason()
-                    )
-                }
-            }),
-        );
-        let delegate = NotificationDelegate::new();
-        user_notification_center
-            .setDelegate(Some(&*ProtocolObject::from_retained(delegate.clone())));
-        println!(
-            "delegate is none ? {}",
-            user_notification_center.delegate().is_none()
-        );
-        Retained::into_raw(delegate);
+    if cfg!(debug_assertions) {
+        return;
+    } else {
+        // let identifier = &app.config().identifier;
+        unsafe {
+            let user_notification_center = UNUserNotificationCenter::currentNotificationCenter();
+            user_notification_center.setNotificationCategories(&*NSSet::from_slice(&[
+                &*UNNotificationCategory::categoryWithIdentifier_actions_intentIdentifiers_options(
+                    ns_string!("dismiss"),
+                    &NSArray::new(),
+                    &NSArray::new(),
+                    UNNotificationCategoryOptions::CustomDismissAction,
+                ),
+            ]));
+            user_notification_center.requestAuthorizationWithOptions_completionHandler(
+                UNAuthorizationOptions::Alert | UNAuthorizationOptions::Sound,
+                &*RcBlock::new(|authorized: Bool, err: *mut NSError| {
+                    if !authorized.as_bool() {
+                        println!("Not authorized")
+                    }
+                    println!("error is null? {}", err.is_null());
+                    if !err.is_null() {
+                        let err = &*err;
+                        println!(
+                            "{:?}\n{:?}",
+                            err.localizedDescription(),
+                            err.localizedFailureReason()
+                        )
+                    }
+                }),
+            );
+            let delegate = NotificationDelegate::new();
+            user_notification_center
+                .setDelegate(Some(&*ProtocolObject::from_retained(delegate.clone())));
+            println!(
+                "delegate is none ? {}",
+                user_notification_center.delegate().is_none()
+            );
+            Retained::into_raw(delegate);
+        }
     }
 }
 
@@ -148,61 +148,62 @@ pub fn notify(
     message: &'static str,
     callback: Option<impl FnOnce() + Send + 'static>,
 ) {
-    #[cfg(debug_assertions)]
-    return;
+    if cfg!(debug_assertions) {
+        return;
+    } else {
+        app.run_on_main_thread(move || unsafe {
+            let user_notification_center = UNUserNotificationCenter::currentNotificationCenter();
+            let id: Option<String> = if let Some(callback) = callback {
+                let delegate = user_notification_center
+                    .delegate()
+                    .expect("delegate is none")
+                    .downcast::<NotificationDelegate>()
+                    .expect("delegate is not a notification delegate");
+                let id = uuid::Uuid::new_v4().to_string();
+                delegate
+                    .ivars()
+                    .callbacks
+                    .borrow_mut()
+                    .insert(id.clone(), Box::new(callback));
+                Some(id)
+            } else {
+                None
+            };
+            user_notification_center.getNotificationSettingsWithCompletionHandler(&RcBlock::new(
+                move |settings: NonNull<UNNotificationSettings>| {
+                    let user_notification_center =
+                        UNUserNotificationCenter::currentNotificationCenter();
+                    let settings = settings.as_ref();
+                    if settings.authorizationStatus() != UNAuthorizationStatus::Authorized {
+                        return;
+                    }
+                    let content = UNMutableNotificationContent::new();
+                    content.setCategoryIdentifier(ns_string!("dismiss"));
 
-    #[cfg(not(debug_assertions))]
-    app.run_on_main_thread(move || unsafe {
-        let user_notification_center = UNUserNotificationCenter::currentNotificationCenter();
-        let id: Option<String> = if let Some(callback) = callback {
-            let delegate = user_notification_center
-                .delegate()
-                .expect("delegate is none")
-                .downcast::<NotificationDelegate>()
-                .expect("delegate is not a notification delegate");
-            let id = uuid::Uuid::new_v4().to_string();
-            delegate
-                .ivars()
-                .callbacks
-                .borrow_mut()
-                .insert(id.clone(), Box::new(callback));
-            Some(id)
-        } else {
-            None
-        };
-        user_notification_center.getNotificationSettingsWithCompletionHandler(&RcBlock::new(
-            move |settings: NonNull<UNNotificationSettings>| {
-                let user_notification_center =
-                    UNUserNotificationCenter::currentNotificationCenter();
-                let settings = settings.as_ref();
-                if settings.authorizationStatus() != UNAuthorizationStatus::Authorized {
-                    return;
-                }
-                let content = UNMutableNotificationContent::new();
-                content.setCategoryIdentifier(ns_string!("dismiss"));
+                    content.setTitle(&NSString::from_str(title));
+                    content.setBody(&NSString::from_str(message));
 
-                content.setTitle(&NSString::from_str(title));
-                content.setBody(&NSString::from_str(message));
+                    if let Some(id) = &id {
+                        let user_info = NSDictionary::from_slices(
+                            &[ns_string!("callback_id")],
+                            &[&*NSString::from_str(id)],
+                        );
+                        let user_info = Retained::cast_unchecked::<
+                            NSDictionary<AnyObject, AnyObject>,
+                        >(user_info);
+                        content.setUserInfo(&*user_info);
+                    }
 
-                if let Some(id) = &id {
-                    let user_info = NSDictionary::from_slices(
-                        &[ns_string!("callback_id")],
-                        &[&*NSString::from_str(id)],
+                    let request = UNNotificationRequest::requestWithIdentifier_content_trigger(
+                        &NSString::from_str("screenqrreader_notification"),
+                        &content,
+                        None,
                     );
-                    let user_info =
-                        Retained::cast_unchecked::<NSDictionary<AnyObject, AnyObject>>(user_info);
-                    content.setUserInfo(&*user_info);
-                }
-
-                let request = UNNotificationRequest::requestWithIdentifier_content_trigger(
-                    &NSString::from_str("screenqrreader_notification"),
-                    &content,
-                    None,
-                );
-                user_notification_center
-                    .addNotificationRequest_withCompletionHandler(&request, None);
-            },
-        ));
-    })
-    .expect("Failed to notificate");
+                    user_notification_center
+                        .addNotificationRequest_withCompletionHandler(&request, None);
+                },
+            ));
+        })
+        .expect("Failed to notificate");
+    }
 }
