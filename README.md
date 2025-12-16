@@ -1,7 +1,25 @@
-# Tauri + Vanilla TS
+# ScreenQRReader2
 
-This template should help get you started developing with Tauri in vanilla HTML, CSS and Typescript.
+画面に表示されているQRコードを読み取る事が出来るツールです。
+コードの内容がURLだった場合は自動でブラウザを開く機能が搭載されています。
 
-## Recommended IDE Setup
+## 詳細な機能
 
-- [VS Code](https://code.visualstudio.com/) + [Tauri](https://marketplace.visualstudio.com/items?itemName=tauri-apps.tauri-vscode) + [rust-analyzer](https://marketplace.visualstudio.com/items?itemName=rust-lang.rust-analyzer)
+* QRコードの読み取り
+* 読み取った内容がURLならブラウザで開く(設定で無効化可能)
+* 読み取った内容がURLじゃない場合に出てくる通知をクリックする事でコピー
+* 設定から読み取り画面を起動するショートカットキーを追加可能
+* パソコンの起動時に自動で起動する設定が可能
+* 自動更新機能
+
+## 技術スタック
+
+* rust (主要言語)
+* tauri (使用フレームワーク)
+* typescript (フロントエンド)
+* zbar (QRコードの読み取り)
+* objc2 (macosの操作諸々)
+
+## ライセンス
+
+LGPL-2.1
