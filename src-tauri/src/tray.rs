@@ -15,6 +15,7 @@ use crate::{
 
 pub fn setup_tray(app: &mut App) -> Result<(), Box<dyn std::error::Error>> {
     let scan_i = MenuItem::with_id(app, "scan", "Scan", true, None::<&str>)?;
+    let about_i = PredefinedMenuItem::about(app, Some("About"), None)?;
     let quit_i = MenuItem::with_id(app, "quit", "Quit", true, None::<&str>)?;
     let separator_i = PredefinedMenuItem::separator(app)?;
 
@@ -54,7 +55,14 @@ pub fn setup_tray(app: &mut App) -> Result<(), Box<dyn std::error::Error>> {
     )?;
     let menu = Menu::with_items(
         app,
-        &[&scan_i, &separator_i, &settings_menu, &separator_i, &quit_i],
+        &[
+            &scan_i,
+            &separator_i,
+            &settings_menu,
+            &separator_i,
+            &about_i,
+            &quit_i,
+        ],
     )?;
 
     let _ = TrayIconBuilder::new()

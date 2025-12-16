@@ -65,8 +65,6 @@ define_class!(
             let action_identifier = &*response.actionIdentifier();
             let clicked = action_identifier == UNNotificationDefaultActionIdentifier;
             let dismissed = action_identifier == UNNotificationDismissActionIdentifier;
-            println!("notification clicked? {clicked}");
-            println!("notification dismissed? {dismissed}");
             if clicked || dismissed {
                 let user_info = response.notification().request().content().userInfo();
                 let id = user_info.objectForKey(ns_string!("callback_id"));
@@ -114,28 +112,11 @@ pub fn setup_notification() {
             ]));
             user_notification_center.requestAuthorizationWithOptions_completionHandler(
                 UNAuthorizationOptions::Alert | UNAuthorizationOptions::Sound,
-                &*RcBlock::new(|authorized: Bool, err: *mut NSError| {
-                    if !authorized.as_bool() {
-                        println!("Not authorized")
-                    }
-                    println!("error is null? {}", err.is_null());
-                    if !err.is_null() {
-                        let err = &*err;
-                        println!(
-                            "{:?}\n{:?}",
-                            err.localizedDescription(),
-                            err.localizedFailureReason()
-                        )
-                    }
-                }),
+                &*RcBlock::new(|_authorized: Bool, _err: *mut NSError| {}),
             );
             let delegate = NotificationDelegate::new();
             user_notification_center
                 .setDelegate(Some(&*ProtocolObject::from_retained(delegate.clone())));
-            println!(
-                "delegate is none ? {}",
-                user_notification_center.delegate().is_none()
-            );
             Retained::into_raw(delegate);
         }
     }

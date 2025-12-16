@@ -27,10 +27,7 @@ fn setup(app: &mut App) -> Result<(), Box<dyn std::error::Error>> {
     config::setup_config(app)?;
     setup_shortcut(app.handle());
     tray::setup_tray(app)?;
-    if mac::is_screenshot_allowed() {
-        println!("screenshot allowed");
-    } else {
-        println!("screenshot not allowed");
+    if !mac::is_screenshot_allowed() {
         mac::request_allow_screenshot();
     }
     mac::setup_notification();
